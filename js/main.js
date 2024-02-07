@@ -34,7 +34,7 @@ function calcularIMCpersona() {
         let altura = parseFloat(prompt("Ingrese la altura de la persona " + (i + 1) + " en metros:"));
 
         // Validar que los datos ingresados sean números válidos
-        if (peso <= 0 || altura <= 0) {
+        if (peso <= 0 || altura <= 0 || !validarNumero(peso) || !validarNumero(altura)) {
             alert("Los valores ingresados para el peso y la altura deben ser números válidos mayores que cero.");
             
         }
