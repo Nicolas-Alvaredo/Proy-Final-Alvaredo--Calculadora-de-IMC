@@ -1,0 +1,45 @@
+/* Selector universal */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+
+  body{
+    background-color: aqua;
+  }
+
+.Titulo-ppal{
+    margin-bottom: 10px;
+    font: "Noto Sans", sans-serif;
+    color: rgb(36, 87, 134);
+    background: linear-gradient(to top, rgba(235, 236, 213, 0.671), rgb(249, 250, 174));
+    font-size: x-large;
+    width: 100%;
+    text-align: center;
+    
+  }
+
+.descripcion{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font: "Noto Sans", sans-serif;
+    color: black;
+    font-size: normal;
+    width: 100%;
+    text-align: center;
+}
+
+#calcularIMCButton{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font: "Noto Sans", sans-serif;
+    color: black;
+    font-size: normal;
+      
+}
+
+
+
+
