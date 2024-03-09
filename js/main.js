@@ -1,81 +1,135 @@
-/* --------------------------------------------------------------------------------------------- */
-/* Calculadora de Masa Corporal */
-
-/* Función para calcular el Indice de masa corporal por persona */
+// Función para calcular el índice de masa corporal (IMC)
 function calcularIMC(peso, altura) {
     return peso / (altura * altura);
 }
 
-// Función para validar si los valores ingresados son  números y no otros caracteres.
-// Uso el simbolo ! para invertir la logica
+// Función para mostrar el formulario y agregar campos dinámicamente
+function mostrarFormularioIMC(cantidadPersonas) {
+    let formularioIMC = document.getElementById("formularioIMC");
+    formularioIMC.style.display = "block";
 
-function validarNumero(numero) {
-    return !isNaN(numero) && isFinite(numero);
-}
+    let calcularIMCForm = document.getElementById("calcularIMCForm");
+    calcularIMCForm.innerHTML = ""; // Limpiar contenido anterior
 
-/* Función principal */
-function calcularIMCpersona() {
-    let arrayPersonas = [];
-    let cantidadPersonas = parseInt(prompt("Ingrese la cantidad de personas para las que desea calcular el Indice de masa corporal:"));
-
-    // Validar que la cantidad de personas ingresada sea un número válido
-    if (cantidadPersonas <= 0 || !validarNumero(cantidadPersonas)) {
-        alert("La cantidad de personas debe ser un número válido mayor que cero.");
-
-    }
-
-    // Pedir datos para cada persona y calcular su IMC
+    // Agregar campos para cada persona
     for (let i = 0; i < cantidadPersonas; i++) {
-        let nombre = prompt("Ingrese el nombre de la persona " + (i + 1));
-        let peso = parseFloat(prompt("Ingrese el peso de la persona " + (i + 1) + " en kilogramos:"));
-        let altura = parseFloat(prompt("Ingrese la altura de la persona " + (i + 1) + " en metros:"));
+        let divPersona = document.createElement("div");
 
-        // Validar que los datos ingresados sean números válidos
-        if (peso <= 0 || altura <= 0 || !validarNumero(peso) || !validarNumero(altura)) {
-            alert("Los valores ingresados para el peso y la altura deben ser números válidos mayores que cero.");
+        let nombreLabel = document.createElement("label");
+        nombreLabel.textContent = "Nombre de la persona " + (i + 1) + ": ";
+        divPersona.appendChild(nombreLabel);
 
-        }
+        let nombreInput = document.createElement("input");
+        nombreInput.type = "text";
+        nombreInput.name = "nombre" + i;
+        divPersona.appendChild(nombreInput);
 
-        let IMC = calcularIMC(peso, altura);
-        
+        let pesoLabel = document.createElement("label");
+        pesoLabel.textContent = "Peso (kg) de la persona " + (i + 1) + ": ";
+        divPersona.appendChild(pesoLabel);
 
-        // Determinar el mensaje según el rango de IMC
-        switch (true) {
-            case (IMC < 18.5):
-                mensaje = "por debajo del peso saludable.";
-                break;
-            case (IMC >= 18.5 && IMC < 25):
-                mensaje = "con un peso saludable.";
-                break;
-            case (IMC >= 25):
-                mensaje = "por encima del peso saludable.";
-                break;
-        }
+        let pesoInput = document.createElement("input");
+        pesoInput.type = "number";
+        pesoInput.name = "peso" + i;
+        divPersona.appendChild(pesoInput);
 
-        // Mostrar el resultado del IMC y el mensaje de estado
-        alert(nombre + " tiene un IMC de " + IMC.toFixed(1) + "." + "\nEstá " + mensaje);
+        let alturaLabel = document.createElement("label");
+        alturaLabel.textContent = "Altura (metros) de la persona " + (i + 1) + ": ";
+        divPersona.appendChild(alturaLabel);
 
+        let alturaInput = document.createElement("input");
+        alturaInput.type = "number";
+        alturaInput.step = "0.01"; // Permitir números decimales con un paso de 0.01
+        alturaInput.name = "altura" + i;
+        divPersona.appendChild(alturaInput);
 
-        // Agregar los datos de IMC al array de personas
-        arrayPersonas.push({
-            nombre: nombre,
-            IMC: IMC
-        });
-
+        calcularIMCForm.appendChild(divPersona);
     }
 
-    // Mostrar los resultados en el HTML
-    arrayPersonas.forEach(persona => {
-        let nuevoelementoLi = document.createElement('li');
-        nuevoelementoLi.innerHTML = `ID:${persona.nombre} - IMC: ${persona.IMC.toFixed(1)}`;
-        listado.appendChild(nuevoelementoLi);
-    });
+    // Agregar el botón de enviar al final del formulario
+    let botonEnviar = document.createElement("button");
+    botonEnviar.type = "button"; // Cambiar el tipo a "button"
+    botonEnviar.textContent = "Calcular IMC";
+    calcularIMCForm.appendChild(botonEnviar);
 
-    // Guardar los datos en el localStorage
-    const IMCJSON = JSON.stringify(arrayPersonas)
-    localStorage.setItem('arrayPersonas',IMCJSON );
+    // Agregar un controlador de eventos al botón de enviar
+    botonEnviar.addEventListener("click", function () {
+        // Limpiar resultados anteriores
+        let listadoIMC = document.getElementById("listadoIMC");
+        listadoIMC.innerHTML = "";
+
+        // Verificar si todos los campos están completos
+        let camposCompletos = true;
+        let arrayPersonas = [];
+        for (let i = 0; i < cantidadPersonas; i++) {
+            let nombre = document.querySelector(`input[name='nombre${i}']`).value;
+            let peso = parseFloat(document.querySelector(`input[name='peso${i}']`).value);
+            let altura = parseFloat(document.querySelector(`input[name='altura${i}']`).value);
+
+            if (nombre === "" || isNaN(peso) || isNaN(altura) || peso <= 0 || altura <= 0) {
+                mostrarError("Por favor, complete todos los campos correctamente para todas las personas.");
+                camposCompletos = false;
+                break;
+            }
+
+            let IMC = calcularIMC(peso, altura);
+
+            // Agregar los datos de IMC al array de personas
+            arrayPersonas.push({
+                nombre: nombre,
+                IMC: IMC
+            });
+        }
+
+        // Si todos los campos están completos, calcular y mostrar el IMC
+        if (camposCompletos) {
+            arrayPersonas.forEach(persona => {
+                let mensaje;
+                if (persona.IMC < 18.5) {
+                    mensaje = "por debajo del peso saludable.";
+                } else if (persona.IMC >= 18.5 && persona.IMC < 25) {
+                    mensaje = "con un peso saludable.";
+                } else {
+                    mensaje = "por encima del peso saludable.";
+                }
+
+                // Mostrar el resultado del IMC en la lista
+                let nuevoElementoLi = document.createElement("li");
+                nuevoElementoLi.textContent = `${persona.nombre} tiene un IMC de ${persona.IMC.toFixed(1)}. Está ${mensaje}`;
+                listadoIMC.appendChild(nuevoElementoLi);
+            });
+
+            // Guardar los datos en el localStorage
+            localStorage.setItem('arrayPersonas', JSON.stringify(arrayPersonas));
+        }
+    });
 }
 
-// Obtener el botón y agregar el evento click
-let IMCboton = document.getElementById("calcularIMCButton")
-IMCboton.addEventListener("click", calcularIMCpersona);
+// Obtener el formulario para la cantidad de personas
+let cantidadPersonasForm = document.getElementById("cantidadPersonasForm");
+cantidadPersonasForm.addEventListener("submit", function (event) {
+    event.preventDefault(); // Evitar que el formulario se envíe por defecto
+
+    let cantidadPersonas = parseInt(document.getElementById("cantidadPersonas").value);
+    if (cantidadPersonas <= 0 || isNaN(cantidadPersonas)) {
+        mostrarError("La cantidad de personas debe ser un número válido mayor que cero.");
+        return;
+    }
+
+    mostrarFormularioIMC(cantidadPersonas);
+});
+
+// Función para mostrar un mensaje de error como un cuadro emergente
+function mostrarError(mensaje) {
+    let mensajeError = document.getElementById("mensajeErrorTexto");
+    mensajeError.textContent = mensaje;
+
+    let modal = document.getElementById("mensajeError");
+    modal.style.display = "block";
+
+    // Obtener el botón de cierre y agregar un controlador de eventos para cerrar el cuadro de diálogo
+    let closeBtn = document.getElementsByClassName("close")[0];
+    closeBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+}

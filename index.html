@@ -15,21 +15,36 @@
 
     <h2 class="descripcion"> Calculadora de indice de masa corporal en base a entrada de datos de usuario</h2>
 
-    <h3 class="enunciado"> Ingrese la cantidad de personas y sus datos mediante el siguiente boton</h2>
+    <h3 class="enunciado"> Ingrese la cantidad de personas y sus datos mediante el siguiente formulario</h2>
 
-        <!-- Botón accionable -->
-        <button id="calcularIMCButton" type="button">Click aqui para carga de datos</button>
+<!-- Formulario para ingresar la cantidad de personas -->
+<form id="cantidadPersonasForm">
+    <input type="number" id="cantidadPersonas" name="cantidadPersonas" required>
+    <button type="submit">Continuar</button>
+</form>
+
+<!-- Formulario para ingresar los datos de cada persona -->
+<div id="formularioIMC" style="display: none">
+    <h3>Ingrese los datos para cada persona:</h3>
+    <form id="calcularIMCForm">
+        <!-- En esta seccion se agregaran los datos dinamicamente -->
+    </form>
+</div>
 
 
-        <!--Listado de datos de IMC por persona-->
-        <ul id="listado">
+<!-- Listado IMC-->
+        <ul id="listadoIMC"></ul>
 
-        </ul>
+ <!-- Mensajes de error -->
+  <div id="mensajeError" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="mensajeErrorTexto"></p>
+    </div>
+</div>
 
-
-
-        <!--Javascript-->
-        <script src="js/main.js"></script>
+<!--Javascript-->
+<script src="js/main.js"></script>
 
 </body>
 
