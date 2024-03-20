@@ -101,6 +101,31 @@ function mostrarFormularioIMC(cantidadPersonas) {
 
             // Guardar los datos en el localStorage
             localStorage.setItem('arrayPersonas', JSON.stringify(arrayPersonas));
+
+
+            // Obtener el valor extra del archivo JSON
+            fetch('json/imc_promedio_mundial.json')
+                .then(response => response.json())
+                .then(data => {
+                    let IMCmundial = data.promedio;
+                    let IMCmundialElemento = document.createElement("p");
+                    IMCmundialElemento.textContent = `Nota:"El promedio de IMC mundial es de: ${IMCmundial}"`;
+                    IMCmundialElemento.style.marginTop = "10px";
+                    listadoIMC.appendChild(IMCmundialElemento);
+                })
+                .catch(error => {
+                    console.error('Error al obtener el valor extra del JSON:', error);
+                });
+
+
+
+            // Mostrar alerta de exito SweetAlert
+            Swal.fire({
+                icon: 'success',
+                title: '¡IMC calculado correctamente!',
+                text: 'Los resultados se han calculado y mostrado correctamente.'
+            });
+
         }
     });
 }
@@ -119,17 +144,12 @@ cantidadPersonasForm.addEventListener("submit", function (event) {
     mostrarFormularioIMC(cantidadPersonas);
 });
 
-// Función para mostrar un mensaje de error como un cuadro emergente
+
+// Función para mostrar un mensaje de error como un cuadro emergente usando SweetAlert
 function mostrarError(mensaje) {
-    let mensajeError = document.getElementById("mensajeErrorTexto");
-    mensajeError.textContent = mensaje;
-
-    let modal = document.getElementById("mensajeError");
-    modal.style.display = "block";
-
-    // Obtener el botón de cierre y agregar un controlador de eventos para cerrar el cuadro de diálogo
-    let closeBtn = document.getElementsByClassName("close")[0];
-    closeBtn.addEventListener("click", function () {
-        modal.style.display = "none";
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: mensaje
     });
 }
