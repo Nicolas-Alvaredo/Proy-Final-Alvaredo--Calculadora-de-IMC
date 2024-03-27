@@ -102,22 +102,36 @@ function mostrarFormularioIMC(cantidadPersonas) {
             // Guardar los datos en el localStorage
             localStorage.setItem('arrayPersonas', JSON.stringify(arrayPersonas));
 
-
             // Obtener el valor extra del archivo JSON
             fetch('json/imc_promedio_mundial.json')
                 .then(response => response.json())
                 .then(data => {
                     let IMCmundial = data.promedio;
                     let IMCmundialElemento = document.createElement("p");
-                    IMCmundialElemento.textContent = `Nota:"El promedio de IMC mundial es de: ${IMCmundial}"`;
-                    IMCmundialElemento.style.marginTop = "10px";
+                    IMCmundialElemento.textContent = `Nota: "El promedio de IMC mundial es de: ${IMCmundial}"`;
                     listadoIMC.appendChild(IMCmundialElemento);
+
+                    // Agregar el botón de reset al final del formulario
+                    let botonReset = document.createElement("button");
+                    botonReset.type = "button";
+                    botonReset.textContent = "Resetear";
+                    botonReset.style.marginTop = "10px"; // Margen superior
+                    botonReset.addEventListener("click", function () {
+                        // Limpiar resultados anteriores
+                        listadoIMC.innerHTML = "";
+
+                        // Limpiar campos del formulario
+                        let inputs = document.querySelectorAll("#calcularIMCForm input[type='text'], #calcularIMCForm input[type='number']");
+                        inputs.forEach(input => input.value = "");
+
+                        // Ocultar formulario
+                        formularioIMC.style.display = "none";
+                    });
+                    listadoIMC.appendChild(botonReset);
                 })
                 .catch(error => {
                     console.error('Error al obtener el valor extra del JSON:', error);
                 });
-
-
 
             // Mostrar alerta de exito SweetAlert
             Swal.fire({
@@ -125,7 +139,6 @@ function mostrarFormularioIMC(cantidadPersonas) {
                 title: '¡IMC calculado correctamente!',
                 text: 'Los resultados se han calculado y mostrado correctamente.'
             });
-
         }
     });
 }
